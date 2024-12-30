@@ -1,3 +1,4 @@
+import { Github } from "lucide-react";
 import Link from "next/link";
 
 import { LatestPost } from "~/app/_components/post";
@@ -47,6 +48,13 @@ export default async function Home() {
             <p className="text-2xl text-white">
               {hello ? hello.greeting : "Loading tRPC query..."}
             </p>
+
+            <Link
+              href="https://github.com/jedymatt/dotenv-sync"
+              className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20 flex gap-2"
+            >
+              Repository <Github />
+            </Link>
 
             <div className="flex flex-col items-center justify-center gap-4">
               <p className="text-center text-2xl text-white">
