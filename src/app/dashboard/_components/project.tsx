@@ -19,9 +19,6 @@ export async function CreateProjectForm() {
         const { data } = CreateProjectSchema.safeParse(
           Object.fromEntries(formData.entries()),
         );
-
-        console.log(data);
-
         if (!data) {
           return;
         }

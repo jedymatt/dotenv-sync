@@ -1,31 +1,32 @@
 import { type PropsWithChildren } from "react";
+import { UserNav } from "./user-nav";
+import { auth } from "~/server/auth";
+import { SessionProvider } from "next-auth/react";
 
 
-export function UserNav() {
+
+
+export default async function AppLayout({ children }: PropsWithChildren) {
+    const session = await auth();
+
     return (
-        <span>Avatar</span>
-    )
-}
+      <div className="flex min-h-screen flex-col">
+        <div className="border-b">
+          <div className="flex justify-center">
+            <div className="w-full max-w-screen-2xl border-x">
+              <div className="flex h-16 items-center px-4">
+                <div className="flex-1"></div>
 
-
-export default function AppLayout({ children }: PropsWithChildren) {
-
-    return (
-        <div className="flex flex-col min-h-screen">
-            <div className="border-b">
-                <div className="flex justify-center">
-                    <div className="border-x max-w-screen-2xl w-full">
-                        <div className="h-16">
-                            <UserNav />
-                        </div>
-                    </div>
-                </div>
+                <SessionProvider session={session}>
+                  <UserNav />
+                </SessionProvider>
+              </div>
             </div>
-            <div className="flex-1 h-full flex justify-center">
-                <div className="max-w-screen-2xl border-x w-full">
-                    {children}
-                </div>
-            </div>
+          </div>
         </div>
-    )
+        <div className="flex h-full flex-1 justify-center">
+          <div className="w-full max-w-screen-2xl border-x">{children}</div>
+        </div>
+      </div>
+    );
 }
