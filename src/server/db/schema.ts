@@ -7,6 +7,8 @@ import {
   text,
   timestamp,
   varchar,
+  uuid,
+  
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -127,3 +129,16 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+export const projects = createTable(
+  'project',
+  {
+    id: varchar('id', {length: 255}).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    name: varchar('name', { length: 255 }).notNull(),
+    varPath: varchar('var_path', { length: 255 }),
+    ownerId: varchar('owner_id', { length: 255 }).notNull().references(() => users.id),
+  },
+  (project) => ({
+    ownerIdIdx: index('project_owner_id_idx').on(project.ownerId),
+  })
+)
