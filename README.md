@@ -4,4 +4,4 @@ WIP
 
 
 
--[ ] [shiki](https://shiki.style/) package for code highlighting. Check for alternatives
+- [ ] [shiki](https://shiki.style/) package for code highlighting. Check for alternatives
