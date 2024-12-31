@@ -1,26 +1,32 @@
-'use client'
+"use client";
 
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
-export  function UserNav() {
-  const {data: session } = useSession();
+export function UserNav() {
+  const { data: session } = useSession();
 
   if (!session) {
     return null;
   }
 
-    async function handleSignOut() {
-        await signOut({redirectTo: '/'});
-    }
+  async function handleSignOut() {
+    await signOut({ redirectTo: "/" });
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-9 rounded-full">
-          <Avatar>
+        <Button variant="ghost" className="h-8 w-8 rounded-full">
+          <Avatar className="h-9 w-9">
             <AvatarImage
               src={session.user.image ?? ""}
               alt={session.user.email?.split("@")[0]}

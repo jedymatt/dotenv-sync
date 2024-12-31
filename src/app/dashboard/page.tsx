@@ -1,7 +1,9 @@
 import { auth } from "~/server/auth";
 import { getProjectsByOwner } from "~/server/queries";
 import AppLayout from "../_components/app-layout";
-import { CreateProjectForm } from './_components/project';
+import { CreateProjectForm } from "./_components/project";
+import Link from "next/link";
+import { Button } from "~/components/ui/button";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -20,6 +22,16 @@ export default async function Dashboard() {
         <p>You have {projects.length} projects</p>
 
         <CreateProjectForm />
+
+        <ul>
+          {projects.map((project) => (
+            <li key={project.id}>
+              <Button variant="link" asChild>
+                <Link href={`/projects/${project.id}`}>{project.name}</Link>
+              </Button>
+            </li>
+          ))}
+        </ul>
       </div>
     </AppLayout>
   );

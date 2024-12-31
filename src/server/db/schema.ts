@@ -127,7 +127,7 @@ export const projects = pgTable(
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
     name: varchar("name", { length: 255 }).notNull(),
-    varPath: varchar("var_path", { length: 255 }),
+    envPath: varchar("env_path", { length: 255 }),
     ownerId: varchar("owner_id", { length: 255 })
       .notNull()
       .references(() => users.id),
