@@ -27,6 +27,8 @@ export function UploadDotenv({ projectId }: { projectId: string }) {
       toast.error("Failed to upload");
     }
 
+    setFile(null);
+
     router.refresh();
   }
 
