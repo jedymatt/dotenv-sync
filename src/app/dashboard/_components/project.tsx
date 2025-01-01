@@ -33,7 +33,7 @@ export async function CreateProjectForm() {
       <div className="flex items-end gap-2">
         <Label>
           Project Name:
-          <Input type="text" name="name" autoFocus className="max-w-sm" />
+          <Input type="text" name="name" autoFocus className="max-w-sm mt-1" />
         </Label>
         <Button type="submit">Create Project</Button>
       </div>

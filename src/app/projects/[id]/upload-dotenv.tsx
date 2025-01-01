@@ -13,13 +13,13 @@ export function UploadDotenv({ projectId }: { projectId: string }) {
   async function handleUpload() {
     if (!file) return;
 
-    const response = await fetch(`/api/projects/${projectId}/upload-dotenv`, {
-      method: "POST",
-      body: file,
-      headers: {
-        contentType: "text/plain",
+    const response = await fetch(
+      `/api/projects/${projectId}/dotenv`,
+      {
+        method: "POST",
+        body: file,
       },
-    });
+    );
 
     if (response.ok) {
       toast.success("Uploaded successfully");

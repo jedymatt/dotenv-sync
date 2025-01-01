@@ -16,14 +16,14 @@ export default async function Dashboard() {
 
   return (
     <AppLayout>
-      <div>
+      <div className="space-y-4">
         <h1>Dashboard</h1>
         <p>Welcome back, {session.user.name}!</p>
-        <p>You have {projects.length} projects</p>
 
         <CreateProjectForm />
 
-        <ul>
+        <p>You have {projects.length} projects:</p>
+        <ul className="">
           {projects.map((project) => (
             <li key={project.id}>
               <Button variant="link" asChild>
