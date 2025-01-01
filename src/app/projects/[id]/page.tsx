@@ -21,7 +21,7 @@ interface Props {
 async function CodeBlock(props: Props) {
   const out = await codeToHtml(props.children, {
     lang: props.lang,
-    theme: "github-dark",
+    theme: "one-dark-pro",
   });
 
   return <div dangerouslySetInnerHTML={{ __html: out }} />;
