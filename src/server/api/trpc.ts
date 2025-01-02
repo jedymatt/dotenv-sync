@@ -8,11 +8,13 @@
  */
 
 import { initTRPC, TRPCError } from "@trpc/server";
+import { and, eq } from "drizzle-orm";
 import superjson from "superjson";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { projects } from "../db/schema";
 
 /**
  * 1. CONTEXT
@@ -128,6 +130,31 @@ export const protectedProcedure = t.procedure
       ctx: {
         // infers the `session` as non-nullable
         session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });
+
+export const protectedProjectProcedure = protectedProcedure
+  .input(z.object({ projectId: z.string() }))
+  .use(async ({ ctx, input, next }) => {
+    const project = await ctx.db.query.projects.findFirst({
+      where: and(
+        eq(projects.id, input.projectId),
+        eq(projects.ownerId, ctx.session.user.id),
+      ),
+    });
+
+    if (!project) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Project not found",
+      });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        project,
       },
     });
   });

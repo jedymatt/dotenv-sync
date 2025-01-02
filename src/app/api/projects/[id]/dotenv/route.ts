@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, type PutObjectCommandInput } from "@aws-sdk/client-s3";
+import { PutObjectCommand, type PutObjectCommandInput } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { auth } from "~/server/auth";
 import { getOwnedProjectById, updateProjectEnvPath } from "~/server/queries";
@@ -40,31 +40,4 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     await updateProjectEnvPath((await params).id, envPath);
 
     return new Response(null, { status: 200 });
-}
-
-export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const projectId = (await params).id;
-    const session = await auth();
-
-    if (!session) {
-        return new Response(null, { status: 401 });
-    }
-
-    const project = await getOwnedProjectById(projectId, session.user.id);
-
-    if (!project) {
-        return new Response(null, { status: 404 });
-    }
-
-    const url = await getSignedUrl(storage.client, new GetObjectCommand({
-        Bucket: storage.bucketName,
-        Key: `projects/${projectId}/.env`,
-    }), { expiresIn: 3600 });
-
-    const response = await fetch(url);
-
-    const dotenvContent = await response.text();
-
-
-    return new Response(dotenvContent, { status: 200, headers: { 'Content-Type': 'text/plain' } });
 }

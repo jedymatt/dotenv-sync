@@ -1,10 +1,8 @@
-import "~/styles/shiki.css";
-
 import { notFound } from "next/navigation";
 import { auth } from "~/server/auth";
 import { getOwnedProjectById } from "~/server/queries";
-import { DotenvSection } from "./_components/dotenv-section";
-import { UploadDotenv } from "./_components/upload-dotenv";
+import { HydrateClient } from "~/trpc/server";
+import { ProjectPage } from "./_components/project-page";
 
 export const dynamic = "force-dynamic";
 
@@ -21,17 +19,8 @@ export default async function Project(props: {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="text-xl font-medium">{project.name}</div>
-      <div className="max-w-md">
-        <UploadDotenv projectId={project.id} />
-      </div>
-
-      {project.envPath ? (
-        <DotenvSection projectId={project.id} />
-      ) : (
-        <p>No .env file uploaded</p>
-      )}
-    </div>
+    <HydrateClient>
+      <ProjectPage project={project} />
+    </HydrateClient>
   );
 }

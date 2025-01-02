@@ -1,25 +1,30 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-export function UploadDotenv({ projectId }: { projectId: string }) {
-  const router = useRouter();
+export function UploadDotenv({
+  projectId,
+  onSuccessfulUpload,
+}: {
+  projectId: string;
+  onSuccessfulUpload?: () => Promise<void>;
+}) {
   const [file, setFile] = useState<ArrayBuffer | null>();
+  const [loading, setLoading] = useState(false);
 
   async function handleUpload() {
     if (!file) return;
+    if (loading) return;
 
-    const response = await fetch(
-      `/api/projects/${projectId}/dotenv`,
-      {
-        method: "POST",
-        body: file,
-      },
-    );
+    setLoading(true);
+    const response = await fetch(`/api/projects/${projectId}/dotenv`, {
+      method: "POST",
+      body: file,
+    });
 
     if (response.ok) {
       toast.success("Uploaded successfully");
@@ -27,13 +32,16 @@ export function UploadDotenv({ projectId }: { projectId: string }) {
       toast.error("Failed to upload");
     }
 
-    setFile(null);
+    if (response.ok && onSuccessfulUpload) {
+      await onSuccessfulUpload();
+    }
 
-    router.refresh();
+    setLoading(false);
+    setFile(null);
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex items-center gap-2">
       <Input
         type="file"
         onChange={async (e) => {
@@ -42,10 +50,22 @@ export function UploadDotenv({ projectId }: { projectId: string }) {
 
           setFile(await file.arrayBuffer());
         }}
+        className="max-w-xs"
       />
-      <Button variant="outline" onClick={handleUpload} disabled={!file}>
+      <Button
+        variant="outline"
+        onClick={handleUpload}
+        disabled={!file || loading}
+      >
         Upload
       </Button>
+
+      {loading && (
+        <div className="flex items-center space-x-2 text-sm">
+          <Loader className="h-4 w-4 animate-spin" />
+          <span>Uploading...</span>
+        </div>
+      )}
     </div>
   );
 }
