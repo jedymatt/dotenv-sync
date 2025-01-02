@@ -2,14 +2,14 @@
 
 import "~/styles/shiki.css";
 
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
+import { Loader } from "lucide-react";
 import React, { Fragment, useLayoutEffect, useState } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { type BundledLanguage, codeToHast } from "shiki/bundle/full";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
-import { ScrollBar } from "~/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 
 async function highlight(code: string, lang: BundledLanguage) {
   const out = await codeToHast(code, {
@@ -36,9 +36,12 @@ function CodeBlock({ initial, code }: { initial?: JSX.Element; code: string }) {
 
 export function DotenvSection({ projectId }: { projectId: string }) {
   const [show, setShow] = useState(false);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  if (show) {
+  if (show && !loading && !content) {
+    setLoading(true);
+
     fetch(`/api/projects/${projectId}/dotenv`)
       .then(async (res) => {
         if (res.ok) {
@@ -49,23 +52,35 @@ export function DotenvSection({ projectId }: { projectId: string }) {
       })
       .catch(() => {
         toast.error("Failed to fetch .env file");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
   return (
     <div className="space-y-4">
-      <Button onClick={() => setShow(!show)}>
-        {show ? "Hide" : "Show"} DotEnv
-      </Button>
-
-      {show && !content && <p>Loading...</p>}
-
-      {show && content && (
-        <ScrollArea className="h-[526px] w-full rounded-lg">
-          <CodeBlock code={content} />
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      )}
+      <div className="flex items-center space-x-4">
+        {
+          <Button
+            variant="outline"
+            onClick={() => setShow(true)}
+            disabled={loading || show}
+          >
+            {show ? "Loaded" : "Load DotEnv"}
+          </Button>
+        }
+        {loading && (
+          <div className="flex items-center space-x-2">
+            <Loader className="h-4 w-4 animate-spin" />
+            <span>Loading...</span>
+          </div>
+        )}
+      </div>
+      <ScrollArea className="h-[526px] w-full rounded-lg">
+        <CodeBlock code={show && !loading ? (content ?? "") : ""} />
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 }

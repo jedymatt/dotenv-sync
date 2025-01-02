@@ -43,7 +43,7 @@ export function UploadDotenv({ projectId }: { projectId: string }) {
           setFile(await file.arrayBuffer());
         }}
       />
-      <Button onClick={handleUpload} disabled={!file}>
+      <Button variant="outline" onClick={handleUpload} disabled={!file}>
         Upload
       </Button>
     </div>

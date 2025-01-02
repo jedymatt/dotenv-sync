@@ -67,5 +67,4 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
 
     return new Response(dotenvContent, { status: 200, headers: { 'Content-Type': 'text/plain' } });
-
 }
