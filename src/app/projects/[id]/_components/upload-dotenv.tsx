@@ -5,14 +5,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { api } from "~/trpc/react";
 
 export function UploadDotenv({
   projectId,
-  onSuccessfulUpload,
 }: {
   projectId: string;
   onSuccessfulUpload?: () => Promise<void>;
 }) {
+  const utils = api.useUtils();
   const [file, setFile] = useState<ArrayBuffer | null>();
   const [loading, setLoading] = useState(false);
 
@@ -32,12 +33,12 @@ export function UploadDotenv({
       toast.error("Failed to upload");
     }
 
-    if (response.ok && onSuccessfulUpload) {
-      await onSuccessfulUpload();
-    }
-
     setLoading(false);
     setFile(null);
+
+    if (response.ok) {
+      await utils.project.getDotenv.invalidate({ projectId });
+    }
   }
 
   return (

@@ -50,23 +50,16 @@ export function ProjectPage({
   project: typeof projects.$inferSelect;
 }) {
   const [showEnv, setShowEnv] = useState(false);
-  const { data, isLoading, isFetched, isError, refetch } =
+  const { data, isLoading, isFetched, isError } =
     api.project.getDotenv.useQuery(
       { projectId: project.id },
-      {
-        enabled: showEnv,
-      },
+      { enabled: showEnv },
     );
 
   return (
     <div className="space-y-4">
       <div className="text-xl font-medium">{project.name}</div>
-      <UploadDotenv
-        projectId={project.id}
-        onSuccessfulUpload={async () => {
-          await refetch();
-        }}
-      />
+      <UploadDotenv projectId={project.id} />
 
       {!project.envPath && (
         <div className="text-muted">No .env file uploaded</div>
