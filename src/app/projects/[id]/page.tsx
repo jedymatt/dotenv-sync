@@ -5,8 +5,6 @@ import { HydrateClient } from "~/trpc/server";
 import { DotenvContainer } from "./_components/dotenv-container";
 import { UploadDotenv } from "./_components/upload-dotenv";
 
-export const dynamic = "force-dynamic";
-
 export default async function Project(props: {
   params: Promise<{ id: string }>;
 }) {
