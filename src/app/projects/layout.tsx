@@ -4,11 +4,11 @@ import Sidebar from "./_components/sidebar";
 
 export default function ProjectLayout({ children }: PropsWithChildren) {
   return (
-    <AppLayout>
-      <div className="grid max-w-screen-2xl grid-cols-6 space-x-6">
-        <Sidebar />
-        <div className="col-span-5">{children}</div>
-      </div>
-    </AppLayout>
+      <AppLayout>
+        <div className="grid max-w-screen-2xl grid-cols-6 space-x-6">
+          <Sidebar />
+          <div className="col-span-5">{children}</div>
+        </div>
+      </AppLayout>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -8,11 +9,15 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export function UserNav() {
   const { data: session } = useSession();
+  const { setTheme, theme } = useTheme();
 
   if (!session) {
     return null;
@@ -36,6 +41,18 @@ export function UserNav() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Theme</DropdownMenuLabel>
+          <Tabs value={theme} onValueChange={setTheme}>
+            <TabsList>
+              <TabsTrigger value="system">System</TabsTrigger>
+              <TabsTrigger value="light">Light</TabsTrigger>
+              <TabsTrigger value="dark">Dark</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
         </DropdownMenuGroup>

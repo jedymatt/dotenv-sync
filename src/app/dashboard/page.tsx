@@ -1,9 +1,9 @@
+import Link from "next/link";
+import { Button } from "~/components/ui/button";
 import { auth } from "~/server/auth";
 import { getProjectsByOwner } from "~/server/queries";
 import AppLayout from "../_components/app-layout";
 import { CreateProjectForm } from "./_components/project";
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -19,9 +19,7 @@ export default async function Dashboard() {
       <div className="space-y-4">
         <h1>Dashboard</h1>
         <p>Welcome back, {session.user.name}!</p>
-
         <CreateProjectForm />
-
         <p>You have {projects.length} projects:</p>
         <ul className="">
           {projects.map((project) => (

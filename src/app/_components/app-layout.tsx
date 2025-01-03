@@ -1,11 +1,13 @@
 import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";
-import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
+import { auth } from "~/server/auth";
 import { UserNav } from "./user-nav";
 
-export default function AppLayout({ children }: PropsWithChildren) {
+export default async function AppLayout({ children }: PropsWithChildren) {
+  const session = await auth();
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="border-b">
@@ -20,10 +22,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                   <Link href="/dashboard">Dashboard</Link>
                 </Button>
               </div>
-              <div className="mr-4">
-                <ModeToggle />
-              </div>
-              <SessionProvider>
+              <SessionProvider session={session}>
                 <UserNav />
               </SessionProvider>
             </div>
