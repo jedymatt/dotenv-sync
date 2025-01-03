@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { devices } from "~/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { db } from "~/server/db";
 import { addMonths } from "date-fns";
+import { and, eq } from "drizzle-orm";
+import { z } from "zod";
+import { db } from "~/server/db";
+import { devices } from "~/server/db/schema";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const deviceRouter = createTRPCRouter({
   verify: protectedProcedure
