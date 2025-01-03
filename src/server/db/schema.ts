@@ -6,7 +6,7 @@ import {
   primaryKey,
   text,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -22,13 +22,13 @@ export const posts = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
+      () => new Date(),
     ),
   },
   (example) => ({
     createdByIdIdx: index("created_by_idx").on(example.createdById),
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );
 
 export const users = pgTable("user", {
@@ -136,3 +136,14 @@ export const projects = pgTable(
     ownerIdIdx: index("project_owner_id_idx").on(project.ownerId),
   }),
 );
+
+export const devices = pgTable("device", {
+  deviceCode: varchar("device_code", { length: 255 })
+    .notNull()
+    .primaryKey(),
+  userCode: varchar("user_code", { length: 255 }).notNull(),
+  userId: varchar("user_id", { length: 255 }).references(() => users.id),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  authorizedAt: timestamp("authorized_at", { withTimezone: true }),
+  accessExpiresAt: timestamp("access_expires_at", { withTimezone: true }),
+});
