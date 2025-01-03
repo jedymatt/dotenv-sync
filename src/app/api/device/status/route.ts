@@ -23,8 +23,8 @@ export async function GET(request: Request) {
 
   return Response.json({
     authorized:
-      device.authorizedAt &&
-      device.accessExpiresAt &&
+      !!device.authorizedAt &&
+      !!device.accessExpiresAt &&
       device.accessExpiresAt > new Date(),
   });
 }
